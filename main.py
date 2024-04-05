@@ -50,11 +50,11 @@ def init_app():
     # Run Kaggle command to download the dataset
     subprocess.run(["kaggle", "datasets", "download", "-d", "awsaf49/brats20-dataset-training-validation"])
 
-    # Rename the 355th file if necessary (it has a default incorrect name)
-    rename_wrong_file(output_path)
+    # # Rename the 355th file if necessary (it has a default incorrect name)
+    # rename_wrong_file(output_path)
 
-    # Check if the dataset exists in the environment to know if we can launch the app
-    check_if_dataset_exists(output_path)
+    # # Check if the dataset exists in the environment to know if we can launch the app
+    # check_if_dataset_exists(output_path)
 
     # Create & compile the CNN (U-Net model)
     model = init_model()
