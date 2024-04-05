@@ -1,6 +1,38 @@
 import streamlit as st
+from kaggle.api.kaggle_api_extended import KaggleApi
 from utils import init_session_state_variables, dataset_unzip, rename_wrong_file, check_if_dataset_exists
 from UNet_2D import init_model
+
+# GLOBAL VARIABLES
+IMG_SIZE = 128
+
+# SLICES RANGE (for predicted segmentation & original one / ground truth)
+VOLUME_START_AT = 0
+VOLUME_SLICES = 155
+
+# Sorted list of our test patients (patients that have not been used for the model training part)
+samples_test = ['BraTS20_Training_009', 'BraTS20_Training_013', 'BraTS20_Training_017', 'BraTS20_Training_019',
+                'BraTS20_Training_025', 'BraTS20_Training_037', 'BraTS20_Training_040', 'BraTS20_Training_041',
+                'BraTS20_Training_051', 'BraTS20_Training_054', 'BraTS20_Training_056', 'BraTS20_Training_072',
+                'BraTS20_Training_076', 'BraTS20_Training_077', 'BraTS20_Training_082', 'BraTS20_Training_083',
+                'BraTS20_Training_094', 'BraTS20_Training_095', 'BraTS20_Training_096', 'BraTS20_Training_107',
+                'BraTS20_Training_112', 'BraTS20_Training_113', 'BraTS20_Training_122', 'BraTS20_Training_129',
+                'BraTS20_Training_146', 'BraTS20_Training_160', 'BraTS20_Training_167', 'BraTS20_Training_180',
+                'BraTS20_Training_185', 'BraTS20_Training_199', 'BraTS20_Training_201', 'BraTS20_Training_222',
+                'BraTS20_Training_237', 'BraTS20_Training_242', 'BraTS20_Training_249', 'BraTS20_Training_255',
+                'BraTS20_Training_266', 'BraTS20_Training_278', 'BraTS20_Training_292', 'BraTS20_Training_297',
+                'BraTS20_Training_302', 'BraTS20_Training_324', 'BraTS20_Training_325', 'BraTS20_Training_335',
+                'BraTS20_Training_356']
+
+# Add a Random patient choice to this list
+samples_test.insert(0, "Random patient")
+
+# Dictionary which links the modalities to their file names in the database
+modalities_dict = {
+    '_t1.nii': 'T1',
+    '_t1ce.nii': 'T1CE',
+    '_t2.nii': 'T2',
+    '_flair.nii': 'FLAIR'}
 
 def init_app():
     """
@@ -16,31 +48,27 @@ def init_app():
     # Initialize session state variables
     init_session_state_variables()
 
-    # File upload widget for dataset
-    uploaded_file = st.file_uploader("Upload dataset (zip file)", type="zip")
+    # Connect to Kaggle and download the dataset
+    api = KaggleApi()
+    api.authenticate()  # Make sure your Kaggle API token is set up
+    dataset_name = 'dataset_name_on_kaggle'  # Replace with the name of the dataset on Kaggle
+    output_path = './datasets'  # Specify the directory where you want to save the dataset
+    api.dataset_download_files(dataset_name, path=output_path, unzip=True)
 
-    if uploaded_file is not None:
-        # Save the uploaded file
-        with open("uploaded_dataset.zip", "wb") as f:
-            f.write(uploaded_file.getbuffer())
+    # Rename the 355th file if necessary (it has a default incorrect name)
+    rename_wrong_file(output_path)
+
+    # Check if the dataset exists in the environment to know if we can launch the app
+    check_if_dataset_exists(output_path)
+
+    # Create & compile the CNN (U-Net model)
+    model = init_model()
         
-        # Unzip the uploaded dataset
-        dataset_unzip("uploaded_dataset.zip")
-
-        # Rename the 355th file if necessary (it has a default incorrect name)
-        rename_wrong_file("uploaded_dataset")
-
-        # Check if the dataset exists in the environment to know if we can launch the app
-        check_if_dataset_exists("uploaded_dataset")
-
-        # Create & compile the CNN (U-Net model)
-        model = init_model()
-        
-        return model
+    return model
 
 if __name__ == '__main__':
     model = init_app()
     if model is not None:
         launch_app(model)
     else:
-        st.write("Please upload the dataset to proceed.")
+        st.write("Please make sure the dataset is downloaded from Kaggle to proceed.")

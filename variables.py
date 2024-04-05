@@ -5,13 +5,13 @@ IMG_SIZE = 128
 VOLUME_START_AT = 0
 VOLUME_SLICES = 155
 
-# # Specify path of our BraTS2020 dataset directory
-# # Local usage
-# data_path = "kaggle datasets download -d awsaf49/brats20-dataset-training-validation"
+# Specify path of our BraTS2020 dataset directory
+# Local usage
+#data_path = "/brats20-dataset-training-validation/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData"
 # best_weights_path = 'weights/model_.26-0.025329.m5'
 
 # AI Deploy usage
-data_path = "/kaggle/input/brats20-dataset-training-validation/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData"
+data_path = "/workspace/brats20-dataset-training-validation/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData"
 best_weights_path = '/workspace/weights/model_.26-0.025329.m5'
 
 # Sorted list of our test patients (patients that have not been used for the model training part)
