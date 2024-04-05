@@ -1,11 +1,4 @@
-keras==2.10.0
-nibabel==5.1.0
-numpy==1.22.0
-opencv-python-headless==4.7.0.68
-scikit-image==0.20.0
-scikit-learn==1.0.2
-streamlit==1.0.0
+streamlit==0.90.0
 kaggle==1.5.12
 matplotlib==3.4.3
 tensorflow==2.7.0
-
