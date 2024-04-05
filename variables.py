@@ -10,7 +10,7 @@ VOLUME_SLICES = 155
 # data_path = "kaggle datasets download -d awsaf49/brats20-dataset-training-validation"
 # best_weights_path = 'weights/model_.26-0.025329.m5'
 
-AI Deploy usage
+# AI Deploy usage
 data_path = "/kaggle/input/brats20-dataset-training-validation/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData"
 best_weights_path = '/workspace/weights/model_.26-0.025329.m5'
 
