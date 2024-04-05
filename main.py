@@ -1,7 +1,6 @@
 import streamlit as st
-# from interface_tumor import *
-from kaggle.api.kaggle_api_extended import KaggleApi
-from utils import init_session_state_variables, dataset_unzip, rename_wrong_file, check_if_dataset_exists
+import subprocess
+from utils import init_session_state_variables, rename_wrong_file, check_if_dataset_exists
 from UNet_2D import init_model
 
 # GLOBAL VARIABLES
@@ -38,10 +37,9 @@ modalities_dict = {
 def init_app():
     """
     App Configuration
-    This functions sets & display the app title, its favicon, initialize some session_state values).
-    It also verifies that the dataset exists in the environment and well unzipped.
+    This function sets and displays the app title, its favicon, initializes some session_state values,
+    verifies that the dataset exists in the environment, and is well unzipped.
     """
-
     # Set config and app title
     st.set_page_config(page_title="Image Segmentation", layout="wide", page_icon="🧠")
     st.title("Brain Tumors Segmentation 🧠")
@@ -49,11 +47,8 @@ def init_app():
     # Initialize session state variables
     init_session_state_variables()
 
-    # Connect to Kaggle and download the dataset
-    api = KaggleApi(kaggle datasets download -d awsaf49/brats20-dataset-training-validation)
-    api.authenticate()  # Make sure your Kaggle API token is set up
-    dataset_name = 'brats20-dataset-training-validation'  # Replace with the name of the dataset on Kaggle
-    api.dataset_download_files(dataset_name,unzip=True)
+    # Run Kaggle command to download the dataset
+    subprocess.run(["kaggle", "datasets", "download", "-d", "awsaf49/brats20-dataset-training-validation"])
 
     # Rename the 355th file if necessary (it has a default incorrect name)
     rename_wrong_file(output_path)
