@@ -1,5 +1,4 @@
 kaggle==1.6.8
-keras==2.10.0
 matplotlib==3.7.0
 nibabel==5.2.1
 numpy==1.23.5
