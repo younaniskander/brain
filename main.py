@@ -1,20 +1,21 @@
 import streamlit as st
-import kaggle
 import os
 from interface_tumor import *
 from utils import init_session_state_variables, dataset_unzip, rename_wrong_file, check_if_dataset_exists
 from UNet_2D import init_model
 from variables import data_path
 
-def download_kaggle_dataset(dataset_name):
+def upload_dataset():
     """
-    Function to download a Kaggle dataset using the Kaggle API.
+    Function to upload dataset from user's PC.
     """
-    # Authenticate with the Kaggle API
-    kaggle.api.authenticate()
+    st.warning("Please upload the dataset file (ZIP format).")
+    uploaded_file = st.file_uploader("Upload Dataset", type=["zip"])
 
-    # Download dataset
-    kaggle.api.dataset_download_files(dataset_name, path=data_path, unzip=True)
+    if uploaded_file is not None:
+        with open(os.path.join(data_path, "uploaded_dataset.zip"), "wb") as f:
+            f.write(uploaded_file.read())
+        st.success("Dataset uploaded successfully!")
 
 def init_app():
     """
@@ -30,11 +31,11 @@ def init_app():
     # Initialize session state variables
     init_session_state_variables()
 
-    # Download Kaggle dataset if not already downloaded
+    # Upload dataset if not already uploaded
     if not check_if_dataset_exists():
-        st.warning("Downloading dataset from Kaggle...")
-        download_kaggle_dataset("awsaf49/brats20-dataset-training-validation")
-        st.success("Dataset downloaded successfully!")
+        upload_dataset()
+    else:
+        st.info("Dataset already exists.")
 
     # Unzip dataset if not already done
     dataset_unzip()
