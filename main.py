@@ -51,9 +51,8 @@ def init_app():
     # Connect to Kaggle and download the dataset
     api = KaggleApi()
     api.authenticate()  # Make sure your Kaggle API token is set up
-    dataset_name = 'dataset_name_on_kaggle'  # Replace with the name of the dataset on Kaggle
-    output_path = './datasets'  # Specify the directory where you want to save the dataset
-    api.dataset_download_files(dataset_name, path=output_path, unzip=True)
+    dataset_name = 'brats20-dataset-training-validation'  # Replace with the name of the dataset on Kaggle
+    api.dataset_download_files(dataset_name,unzip=True)
 
     # Rename the 355th file if necessary (it has a default incorrect name)
     rename_wrong_file(output_path)
