@@ -1,4 +1,5 @@
 import streamlit as st
+from interface_tumor import *
 from kaggle.api.kaggle_api_extended import KaggleApi
 from utils import init_session_state_variables, dataset_unzip, rename_wrong_file, check_if_dataset_exists
 from UNet_2D import init_model
@@ -50,7 +51,7 @@ def init_app():
 
     # Connect to Kaggle and download the dataset
     api = KaggleApi()
-    api.authenticate()  # Make sure your Kaggle API token is set up
+    # api.authenticate()  # Make sure your Kaggle API token is set up
     dataset_name = 'awsaf49/brats20-dataset-training-validation'  # Replace with the name of the dataset on Kaggle
     api.dataset_download_files(dataset_name,unzip=True)
 
