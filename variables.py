@@ -7,7 +7,7 @@ VOLUME_SLICES = 155
 
 # Specify path of our BraTS2020 dataset directory
 # Local usage
-data_path = "/brats20-dataset-training-validation/BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData"
+data_path = "kaggle datasets download -d awsaf49/brats20-dataset-training-validation"
 best_weights_path = 'weights/model_.26-0.025329.m5'
 
 # AI Deploy usage
