@@ -50,9 +50,9 @@ def init_app():
     init_session_state_variables()
 
     # Connect to Kaggle and download the dataset
-    api = KaggleApi()
+    api = KaggleApi(kaggle datasets download -d awsaf49/brats20-dataset-training-validation)
     api.authenticate()  # Make sure your Kaggle API token is set up
-    dataset_name = 'awsaf49/brats20-dataset-training-validation'  # Replace with the name of the dataset on Kaggle
+    dataset_name = 'brats20-dataset-training-validation'  # Replace with the name of the dataset on Kaggle
     api.dataset_download_files(dataset_name,unzip=True)
 
     # Rename the 355th file if necessary (it has a default incorrect name)
