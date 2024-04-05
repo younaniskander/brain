@@ -1,9 +1,6 @@
-from interface_tumor import *
 import streamlit as st
 from utils import init_session_state_variables, dataset_unzip, rename_wrong_file, check_if_dataset_exists
 from UNet_2D import init_model
-from variables import data_path
-
 
 def init_app():
     """
@@ -19,21 +16,31 @@ def init_app():
     # Initialize session state variables
     init_session_state_variables()
 
-    # Unzip dataset if not already done
-    dataset_unzip()
+    # File upload widget for dataset
+    uploaded_file = st.file_uploader("Upload dataset (zip file)", type="zip")
 
-    # Rename the 355th file if necessary (it has a default incorrect name)
-    rename_wrong_file(data_path)
+    if uploaded_file is not None:
+        # Save the uploaded file
+        with open("uploaded_dataset.zip", "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        
+        # Unzip the uploaded dataset
+        dataset_unzip("uploaded_dataset.zip")
 
-    # Check if the dataset exists in the environment to know if we can launch the app
-    check_if_dataset_exists()
+        # Rename the 355th file if necessary (it has a default incorrect name)
+        rename_wrong_file("uploaded_dataset")
 
-    # Create & compile the CNN (U-Net model)
-    model = init_model()
+        # Check if the dataset exists in the environment to know if we can launch the app
+        check_if_dataset_exists("uploaded_dataset")
 
-    return model
-
+        # Create & compile the CNN (U-Net model)
+        model = init_model()
+        
+        return model
 
 if __name__ == '__main__':
     model = init_app()
-    launch_app(model)
+    if model is not None:
+        launch_app(model)
+    else:
+        st.write("Please upload the dataset to proceed.")
